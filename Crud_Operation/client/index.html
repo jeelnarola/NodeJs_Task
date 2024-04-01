@@ -4,8 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-       
+       .name,.email,.phone{
+        color: red;
+        font-size: 10px;
+        padding: 0px 40px;
+       }
+       .row{
+        display: flex;
+        flex-wrap: nowrap;
+       }
+       .row i{
+        margin: 20px 10px;
+        font-size: 20px;
+        cursor: pointer;
+       }
+       table{
+        border: 1px solid black;
+        padding: 10px;
+        margin:10px 30px;
+       }
+       table thead th,table tbody tr td{
+        border: 1px solid black;
+        padding: 5px;
+
+       }
+       table thead{
+        background-color: black;
+        color: white;
+       }
+       .tdimg{
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+       }
+       .search input::placeholder{
+        font-size: 10px;
+       }
+       .search input{
+        margin: 0px 30px;
+        padding: 10px;
+    }
+       .search {
+        padding: 10px;
+       }
     </style>
 </head>
 <body>
@@ -13,18 +56,214 @@
     <form id="register">
         <h1>Ragister</h1>
         <div class="box">
-            <label for="name">Name</label>
-            <input type="text" name="name" placeholder="name" id="name">
+            <label for="image">image* : </label>
+            <input type="url" name="image" placeholder="image URL" value=" " id="image">
         </div>
         <div class="box">
-            <label for="email">Email</label>
-            <input type="email" name="email" placeholder="email" id="email">
+            <label for="name">Name* : </label>
+            <input type="text" name="name" placeholder="name" value=" " id="name">
+            <p class="name"></p>
         </div>
         <div class="box">
-            <label for="phone">Number</label>
-            <input type="number" name="phone" placeholder="Phone Number" id="phone">
+            <label for="email">Email* : </label>
+            <input type="email" name="email" placeholder="email" value=" " id="email">
+            <p class="email"></p>
+        </div>
+        <div class="box">
+            <label for="phone">Number* : </label>
+            <input type="number" name="phone" placeholder="Phone Number" value=" " id="phone">
+            <p class="phone"></p>
         </div>
         <input type="submit" value="submit" class="submit">
     </form>
+
+    <section class="search">
+        <form action="" id="usersearch">
+            <input type="text" placeholder="Search Name OR Email OR phone" id="search" name="sea">
+            <input type="submit" value="submit" style="display: none;">
+        </form>
+    </section>
+    <section>
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>status</th>
+                <th>Action</th>
+            </thead>
+            <tbody id="tb">
+
+            </tbody>
+        </table>
+    </section>
+
+<script>
+    let id=-1;
+    console.log(id);
+    document.getElementById("register").addEventListener("submit",(e)=>{
+
+        e.preventDefault()
+            let btn=document.querySelector(".submit").value
+            console.log(btn);
+            console.log(id);
+
+        if(btn==="Edit"){
+            let obj={
+            image:document.getElementById("image").value,
+            name:document.getElementById("name").value,
+            email:document.getElementById("email").value,
+            phone:document.getElementById("phone").value,
+            
+        }
+        fetch(`http://localhost:8090/update/${id}`,{
+            method:"PATCH",
+            headers:{"content-type":"application/json"},
+            body:JSON.stringify(obj)
+        }).then((res)=>res.json())
+        .then((data)=>{
+            window.location.reload()
+        })
+        }
+        else{
+            
+        let obj={
+            image:document.getElementById("image").value,
+            name:document.getElementById("name").value,
+            email:document.getElementById("email").value,
+            phone:document.getElementById("phone").value,
+        }
+        if(!(obj.image.length>0)){
+            document.getElementById("image").style.border="2px solid red"
+        }else{
+            document.getElementById("image").style.border="2px solid black"
+        }
+        if(!obj.name.length>0){
+            document.getElementById("name").style.border="2px solid red"
+            document.querySelector(".name").innerHTML="Not Valid name !"
+        }else{
+            document.getElementById("name").style.border="2px solid black"
+        }
+        if(!obj.email.length>0){
+            document.getElementById("email").style.border="2px solid red"
+            document.querySelector(".email").innerHTML="Not Valid email !"
+        }else{
+            document.getElementById("email").style.border="2px solid black"
+        }
+        if(obj.phone.length>=10&&obj.phone.length<=10){
+            document.getElementById("phone").style.border="2px solid black"
+        }else{
+            document.getElementById("phone").style.border="2px solid red"
+            document.querySelector(".phone").innerHTML="Not Valid Number !"
+        }
+        if(obj.image.length>0&&obj.name.length>0&&obj.email.length>0&&obj.phone.length>0){
+            document.getElementById("image").style.border="2px solid black"
+            document.getElementById("name").style.border="2px solid black"
+            document.getElementById("email").style.border="2px solid black"
+            document.getElementById("phone").style.border="2px solid black"
+        }
+        if(obj.image.length>0&&obj.name.length>0&&obj.email.length>0&&obj.phone.length>=10&&obj.phone.length<=10){
+            fetch("http://localhost:8090/createUser",{
+                method:"POST",
+                headers:{"content-type":"application/json"},
+                body:JSON.stringify(obj)
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                window.location.reload()
+            })
+        }
+    }
+    })
+    let User=0;
+    const delet=(id)=>{
+        fetch(`http://localhost:8090/delete/${id}`,{
+            method:"DELETE"
+        })
+        .then((res)=>res.json())
+        .then((data)=>{
+            alert("Status Update ")
+            window.location.reload()
+        })
+    }
+
+
+
+    const display=(data)=>{
+        document.getElementById("tb").innerHTML=" "
+        data.map((ele)=>{
+            let tr=document.createElement("tr")
+            let UserID=document.createElement('td')
+            UserID.innerHTML=User++;
+
+            let tdimg=document.createElement("td")
+            let img=document.createElement("img")
+            img.setAttribute("class","tdimg")
+            img.src=ele.image
+            tdimg.append(img)
+
+            let name=document.createElement("td")
+            name.innerHTML=ele.name
+
+            let email=document.createElement("td")
+            email.innerHTML=ele.email
+            let phone=document.createElement("td")
+            phone.innerHTML=ele.phone
+
+            let icon=document.createElement("td")
+            icon.setAttribute("class","row")
+            
+            let update=document.createElement("i")
+            update.setAttribute("class","fa-solid fa-pen-to-square")
+            update.addEventListener("click",()=>{
+                fetch(`http://localhost:8090/update/${ele._id}`)
+                .then((res)=>res.json())
+                .then((data)=>{
+                    document.getElementById("image").value=data.image
+                    document.getElementById("name").value=data.name
+                    document.getElementById("email").value=data.email
+                    document.getElementById("phone").value=data.phone
+                    document.querySelector(".submit").value="Edit"
+                    id=ele._id;
+                })
+            })
+            let dele=document.createElement("i")
+            dele.setAttribute("class","fa-solid fa-trash")
+            icon.append(update,dele)
+            dele.addEventListener("click",()=>delet(ele._id))
+
+            let status=document.createElement("td")
+            status.innerHTML=ele.status
+
+
+            tr.append(UserID,tdimg,name,email,phone,status,icon)
+            document.getElementById("tb").append(tr)
+        })
+    }
+
+    // console.log(id);
+
+    document.getElementById("usersearch").addEventListener("submit",(e)=>{
+        e.preventDefault()
+        let search=document.getElementById("search").value
+               fetch(`http://localhost:8090/search?sear=${search}`)
+               .then((res)=>res.json())
+               .then((data)=>{
+                   display(data)
+               })
+    })
+
+    const get=()=>{
+        fetch("http://localhost:8090/AllData")
+        .then((res)=>res.json())
+        .then((data)=>{
+            // console.log(data);
+            display(data)
+        })
+    }
+    get()
+</script>
 </body>
 </html>

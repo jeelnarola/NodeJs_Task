@@ -1,6 +1,7 @@
 const {Router}=require('express')
 const { body, validationResult } = require('express-validator');
-const {search, updateUser, userdelete, record, AddData } = require('../controller/user.controoler');
+const {search, updateUser, userdelete, record, AddData, AllData } = require('../controller/user.controoler');
+const user = require('../model/user.schema');
 const router=Router()
 
     
@@ -22,5 +23,14 @@ router.delete("/delete/:id",userdelete)
 
     // USER SELECT NUMBER AND SHOW DATA API
 router.post("/record",record)
+
+    // ALL DATA SHOW API
+router.get("/AllData",AllData)
+
+router.get("/update/:id",async(req,res)=>{
+    let {id}=req.params
+    let data=await user.findById(id)
+    res.json(data)
+})
 
 module.exports=router

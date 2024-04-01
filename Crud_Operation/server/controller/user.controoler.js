@@ -18,13 +18,14 @@ const AddData=async(req,res)=>{
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
+    console.log(req.body.name);
     try {
         let obj={
+            image:req.body.image,
             name:req.body.name,
             email:req.body.email,
             password:req.body.password,
             phone:req.body.phone,
-            // CreateById:UserId++,
             status:true,
             created_date:`${year}/${month}/${day}  ${hours}:${minutes}:${second}`,
         }
@@ -37,9 +38,9 @@ const AddData=async(req,res)=>{
 
     // USER SERACH IN DATA CATCH AND GET API TO THROW DATA FRONT-END
 const search=async(req,res)=>{
-    let {search}=req.query
+    let {sear}=req.query
     try {
-        const users = await user.find({$or:[{ name:search},{ email:search},{ phone:search}]});
+        const users = await user.find({$or:[{ name:sear},{ email:sear},{ phone:sear}]});
         res.json(users);
     } catch (error) {
         console.error('Error searching users:', error);
@@ -52,7 +53,9 @@ updateUser = async (req, res) => {
     try {
         const { id } = req.params;
         const {name,email,phone}=req.body
+        
         let obj={
+            image:req.body.image,
             name:req.body.name,
             email:req.body.email,
             password:req.body.password,
@@ -78,7 +81,7 @@ const userdelete=async(req,res)=>{
         let data=await user.findById(id);
         let stro=await user.findByIdAndUpdate(id,obj)
         await stro.save()
-        res.send(stro);
+        res.json(stro);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -100,4 +103,9 @@ const record=async(req,res)=>{
     }
 }
 
-module.exports={AddData,search,updateUser,userdelete,record}
+const AllData=async(req,res)=>{
+    let data=await user.find()
+    res.json(data)
+}
+
+module.exports={AddData,search,updateUser,userdelete,record,AllData}
