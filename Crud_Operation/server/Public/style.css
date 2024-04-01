@@ -1,0 +1,14 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+style{
+    display: block;
+}
+body{
+    background-color: black;
+}
+h1{
+    font-size: 100px;
+}
