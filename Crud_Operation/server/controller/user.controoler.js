@@ -55,7 +55,6 @@ updateUser = async (req, res) => {
         const {name,email,phone}=req.body
         
         let obj={
-            image:req.body.image,
             name:req.body.name,
             email:req.body.email,
             password:req.body.password,

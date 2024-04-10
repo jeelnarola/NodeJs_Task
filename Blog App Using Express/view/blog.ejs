@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/BlogAdd" method="POST">
+        <h3>Blog Add </h3>
+        <div class="blog-box">
+            <label for="">Title</label>
+            <input type="text" placeholder="Title" name="title" required>
+        </div>
+        <div class="blog-box">
+            <label for="">Image</label>
+            <input type="url" placeholder="image" name="image" required>
+        </div>
+        <div class="blog-box">
+            <label for="">Category</label>
+            <select name="category" id="" required>
+                <option value=" " selected> </option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Technology">Technology,</option>
+                <option value="Sports">Sports</option>
+                <option value="Business">Business</option>
+                <option value="Health">Health</option>
+                <option value="Science">Science</option>
+            </select>
+        </div>
+        <div class="blog-box" >
+            <label for="">Bloger Name</label>
+            <input type="text" placeholder="bloger name" name="bloger_name" required>
+        </div>
+        <div class="blog-box">
+            <label for="">Description</label>
+            <textarea type="text" placeholder="description" name="description" required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
